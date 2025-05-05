@@ -1,0 +1,121 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Аналіз ринку: Нові можливості для малого бізнесу в Україні</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+        .section-bg {
+            background: linear-gradient(to bottom, #f3f4f6, #ffffff);
+        }
+        .hover-effect {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .hover-effect:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+    <header class="bg-blue-600 text-white py-6">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold">Аналіз ринку: Нові можливості для малого бізнесу в Україні</h1>
+            <p class="mt-2 text-lg">Дата: 01.05.2025 | Автор: Злата Фортуна</p>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-12">
+        <!-- Поточна ситуація -->
+        <section class="mb-12 section-bg p-6 rounded-lg shadow-lg hover-effect">
+            <h2 class="text-2xl font-bold text-blue-700 mb-4">Поточна ситуація</h2>
+            <ul class="list-disc pl-6 space-y-2">
+                <li>У 2024 році індекс настроїв малого бізнесу впав до <strong>2,3 бала</strong> з 5 — найнижчий показник за останні роки.</li>
+                <li>Лише <strong>5%</strong> підприємців оцінюють економічну ситуацію як сприятливу, <strong>54%</strong> — як несприятливу, <strong>41%</strong> — як катастрофічну.</li>
+            </ul>
+        </section>
+
+        <!-- Нові можливості -->
+        <section class="mb-12 section-bg p-6 rounded-lg shadow-lg hover-effect">
+            <h2 class="text-2xl font-bold text-blue-700 mb-4">Нові можливості та позитивні тенденції</h2>
+            <ul class="list-disc pl-6 space-y-2">
+                <li>Попри складнощі, <strong>два з трьох</strong> малих бізнесів планують розширення у 2025 році.</li>
+                <li><strong>25%</strong> підприємців планують запуск нових напрямів виробництва.</li>
+                <li><strong>13%</strong> — розширення географії діяльності.</li>
+                <li><strong>14%</strong> — вихід на зовнішні ринки.</li>
+                <li>Частка бізнесів, які працюють лише онлайн, зросла з <strong>15%</strong> до <strong>24%</strong>, що свідчить про активну цифрову трансформацію.</li>
+            </ul>
+        </section>
+
+        <!-- Ключові виклики -->
+        <section class="mb-12 section-bg p-6 rounded-lg shadow-lg hover-effect">
+            <h2 class="text-2xl font-bold text-blue-700 mb-4">Ключові виклики</h2>
+            <ul class="list-disc pl-6 space-y-2">
+                <li>Війна та її наслідки.</li>
+                <li>Зростання цін на сировину й енергоресурси.</li>
+                <li>Нестабільність економіки.</li>
+                <li>Атаки на енергетичну систему.</li>
+                <li>Фіскальний тиск з боку держави.</li>
+            </ul>
+        </section>
+
+        <!-- Висновок -->
+        <section class="mb-12 section-bg p-6 rounded-lg shadow-lg hover-effect">
+            <h2 class="text-2xl font-bold text-blue-700 mb-4">Висновок</h2>
+            <p>Ринок малого бізнесу в Україні демонструє стійкість і значний потенціал для розвитку, особливо у сфері цифрової трансформації, розширення виробництва та виходу на нові ринки. Підприємці готові інвестувати в майбутнє, що відкриває нові можливості для інновацій і партнерств.</p>
+            <p class="mt-4 font-semibold">Цікавить детальніший аналіз окремих секторів чи приклади успішних кейсів малого бізнесу? Телефон: +380969722735</p>
+        </section>
+    </main>
+
+    <footer class="bg-blue-600 text-white py-6">
+        <div class="container mx-auto px-4 text-center">
+            <p>© 2025 Злата Фортуна. Усі права захищено.</p>
+            <p class="mt-2">Джерело: Аналіз ринку малого бізнесу в Україні, 01.05.2025</p>
+        </div>
+    </footer>
+</body>
+</html>
